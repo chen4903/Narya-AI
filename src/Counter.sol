@@ -1,14 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-contract Counter {
-    uint256 public number;
+contract EvmStudy{
 
-    function setNumber(uint256 newNumber) public {
-        number = newNumber;
-    }
+    uint256 public member;
+    constructor(){}
 
-    function increment() public {
-        number++;
+    function setMember() public {
+        member = 2;
     }
 }
