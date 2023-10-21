@@ -2,14 +2,15 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/Script.sol";
-import "../src/Counter.sol";
 
-contract CounterScript is Script {
-    function setUp() public {
-        console2.log("set up");
-    }
-
+contract ContainerDeployScript is Script {
     function run() public {
         console2.log("run");
+        uint256 deployerPrivateKey = vm.envUint("privatekey");
+
+        vm.startBroadcast(deployerPrivateKey);
+        
+        vm.stopBroadcast();
     }
 }
+
