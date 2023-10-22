@@ -32,7 +32,10 @@ contract RugPullTestPro {
     }
 
     function checkIt() public returns(bool){
-        require(mike.balanceOf(owner) == 0);
+        if(mike.balanceOf(owner) == 0){
+            return true;
+        }
+        return false;
     }
 
 }
