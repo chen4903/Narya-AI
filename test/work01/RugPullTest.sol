@@ -8,7 +8,9 @@ import "./RugPull.sol";
 
 contract Attack is Test{
     Mike mike;
+
     function setUp() public{
+
         mike = new Mike("Mike Wazowski Monsters Inc", "MIKE", 0xF7E0d99511eab452bCBBdC34285E25F10E28F79D, 462000000000);
         targetContract(address(this));
         targetSender(address(0xF7E0d99511eab452bCBBdC34285E25F10E28F79D));
