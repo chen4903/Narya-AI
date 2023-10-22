@@ -31,5 +31,9 @@ contract RugPullTestPro {
         mike.transferFrom(addr, address(owner), amount);
     }
 
+    function checkIt() public returns(bool){
+        require(mike.balanceOf(owner) == 0);
+    }
+
 }
 
