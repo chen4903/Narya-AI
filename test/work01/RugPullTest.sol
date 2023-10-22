@@ -8,12 +8,14 @@ import "./RugPull.sol";
 
 contract Attack is Test{
     Mike mike;
+    address owner = 0xF7E0d99511eab452bCBBdC34285E25F10E28F79D;
 
     function setUp() public{
 
-        mike = new Mike("Mike Wazowski Monsters Inc", "MIKE", 0xF7E0d99511eab452bCBBdC34285E25F10E28F79D, 462000000000);
+        vm.startBroadcast(owner);
+        mike = new Mike("Mike Wazowski Monsters Inc", "MIKE", owner, 462000000000);
         targetContract(address(this));
-        targetSender(address(0xF7E0d99511eab452bCBBdC34285E25F10E28F79D));
+        targetSender(address(owner));
 
         // 这个会检测出来存在rugPull风险
         // 因为从合约结构上来看，是没有增发的功能的，并且在没有其他人approve给owner的情况下，随机调用函数，他的余额肯定是0不变，
@@ -28,40 +30,40 @@ contract Attack is Test{
         targetSelector(
             FuzzSelector({addr: address(this), selectors: selectors})
         );
+        vm.stopBroadcast();
     }
 
     // 为什么地址都填0xF7E0d99511eab452bCBBdC34285E25F10E28F79D呢？
     // 因为如果存在增发可能的话，假设增发给owner，我们就将获利设置为owner的地址，然后检测owner地址的余额是否变化
     function increaseAllowance(uint256 amount) public{
-        mike.increaseAllowance(address(0xF7E0d99511eab452bCBBdC34285E25F10E28F79D), amount);
+        mike.increaseAllowance(address(owner), amount);
     }
     function transfer(uint256 amount) public{
-        mike.transfer(address(0xF7E0d99511eab452bCBBdC34285E25F10E28F79D), amount);
+        mike.transfer(address(owner), amount);
     }
     function approve(uint256 amount) public{
-        mike.approve(address(0xF7E0d99511eab452bCBBdC34285E25F10E28F79D), amount);
+        mike.approve(address(owner), amount);
     }
     function Approve(uint256 amount) public{
-        mike.Approve(address(0xF7E0d99511eab452bCBBdC34285E25F10E28F79D), amount);
+        mike.Approve(address(owner), amount);
     }
     function transferFrom(address addr, uint256 amount) public{
-        mike.transferFrom(addr, address(0xF7E0d99511eab452bCBBdC34285E25F10E28F79D), amount);
+        mike.transferFrom(addr, address(owner), amount);
     }
 
     // 这是RugPull的PoC
     // function test_demo() public{
-    //     console.log("Before Rug Pull", mike.balanceOf(0xF7E0d99511eab452bCBBdC34285E25F10E28F79D));
-    //     vm.startBroadcast(address(0xF7E0d99511eab452bCBBdC34285E25F10E28F79D));
-    //     mike.increaseAllowance(0xF7E0d99511eab452bCBBdC34285E25F10E28F79D, 1262000000000000000000000000000000);
-    //     console.log("After Rug Pull", mike.balanceOf(0xF7E0d99511eab452bCBBdC34285E25F10E28F79D));
+    //     console.log("Before Rug Pull", mike.balanceOf(owner));
+    //     vm.startBroadcast(address(owner));
+    //     mike.increaseAllowance(owner, 1262000000000000000000000000000000);
+    //     console.log("After Rug Pull", mike.balanceOf(owner));
     //     vm.stopBroadcast();
     // }
 
     function invariant_rugPull() public{
-        // 需要尝试若干次，因为invariant测试的时候，参数未必就是将owner的地址作为输入，他是随机的，因此测试发现问题也是随机事件
         // [fuzz]
         // runs = 5000
-        require(mike.balanceOf(0xF7E0d99511eab452bCBBdC34285E25F10E28F79D) == 0);
+        require(mike.balanceOf(owner) <= 462000000000 * 10**18);
     }
 }
 

@@ -32,7 +32,8 @@ contract RugPullTestPro {
     }
 
     function checkIt() public returns(bool){
-        if(mike.balanceOf(owner) == 0){
+        // 如果没增发，应该恒小于等于462000000000  * 10**18
+        if(mike.balanceOf(owner) <= 462000000000  * 10**18){
             return true;
         }
         return false;
